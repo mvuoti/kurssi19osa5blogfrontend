@@ -6,7 +6,7 @@ const Notification = ({text, isError}) => {
     'notification',
     isError ? 'notification-error' : 'notification-info'
   ].join(" ")
-  return <div className={classNames}>NOOTTI: {text}</div>
+  return <div className={classNames}>{text}</div>
 }
 
 export default Notification
