@@ -1,14 +1,16 @@
 import React from 'react';
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createRef } from 'react';
 import Login from './components/login.js';
 import Blog from './components/Blog.js';
 import BlogEntryForm from  './components/blog_entry_form';
 import Notification from './components/notification';
+import Togglable from './components/togglable';
 import LoginService from './services/login.js';
 import BlogsService from './services/blogs.js';
 
-const NOTIFICATION_DISPLAY_TIME_MS = 3000;
+
+const NOTIFICATION_DISPLAY_TIME_MS = 300;
 
 function App() {
   const [username, setUsername] = useState('seppo');
@@ -18,6 +20,9 @@ function App() {
   const [notificationText, setNotificationText] = useState(undefined);
   const [notificationIsError, setNotificationIsError] = useState(undefined);
   const [notificationTimeoutId, setNotificationTimeoutId] = useState(undefined);
+
+  // ref for managing togglable blog form visibility
+  const blogFormRef = createRef();
 
   // local storage of login session
   const doSaveSessionToLocalStorage = (sessionData) => {
@@ -77,6 +82,7 @@ function App() {
     BlogsService.save(blogValues, user.token)
     .then(() => doFetchBlogs())
     .then(() => doShowInfo(`Blog "${blogValues.title}" saved!`))
+    .then(() => blogFormRef.current.doHide())
     .catch(e => {
       doShowError(e)
     })
@@ -103,19 +109,26 @@ function App() {
   return (
     <div className="App">
       <Notification text={ notificationText } isError={notificationIsError}/>
-      <Login
-        isLoggedIn={!!user}
-        username={username}
-        password={password}
-        setUsername={setUsername}
-        setPassword={setPassword}
-        doLogin={onDoLogin}
-        doLogout={onDoLogout}
-      />
+      <Togglable buttonTextWhenClosed='Show Login' buttonTextWhenOpen='Hide Login'>
+        <Login
+          isLoggedIn={!!user}
+          username={username}
+          password={password}
+          setUsername={setUsername}
+          setPassword={setPassword}
+          doLogin={onDoLogin}
+          doLogout={onDoLogout}
+        />
+      </Togglable>
       <br/>
       { user !== undefined
-        ? <BlogEntryForm onBlogSubmit={ onBlogSubmit } />
-        : <></> }
+        ? <Togglable
+          ref={blogFormRef}
+          buttonTextWhenOpen="Cancel"
+          buttonTextWhenClosed="Submit New Blog">
+            <BlogEntryForm onBlogSubmit={onBlogSubmit} />
+        </Togglable>
+        : <></>}
       <br/>
       <div>{ blogList }</div>
     </div>
