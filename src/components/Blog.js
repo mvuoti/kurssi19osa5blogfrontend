@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import './blog.css'
 
-const Blog = ({ blog, onLikeClicked }) => {
+const Blog = ({ blog, onLikeClicked, onBlogRemove }) => {
   const [isFullView, setIsFullView] = useState(false)
 
   const toggleFullView = () => setIsFullView(!isFullView)
@@ -18,6 +18,7 @@ const Blog = ({ blog, onLikeClicked }) => {
       <div><a href={blog.url}>{blog.url}</a></div>
       <div>{blog.likes} likes <button onClick={()=>onLikeClicked(blog)}>Like</button></div>
       <div>added by {blog.user.name}</div>
+      <div><button onClick={() => onBlogRemove(blog) }>Remove</button></div>
     </div>
 
   return isFullView ? fullView : tightView

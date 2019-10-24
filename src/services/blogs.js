@@ -35,4 +35,11 @@ const saveOldBlog = (blog, token) => {
   return request.then(response => response.data)
 }
 
-export default { getAll, save }
+const remove = (blogId, token) => {
+  const authHead = makeAuthorizationHeader(token)
+  const config = { headers: authHead }
+  const itemUrl = [baseUrl, blogId].join('/')
+  const request = axios.delete(itemUrl, config)
+  return request.then(response => response.data)
+}
+export default { getAll, save, remove }

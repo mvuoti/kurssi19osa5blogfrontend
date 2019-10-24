@@ -98,6 +98,17 @@ function App() {
     })
   }
 
+  const onBlogRemove = blog => {
+    if(window.confirm(`You are deleting blog ${blog.title}?`)) {
+      BlogsService.remove(blog.id, user.token)
+      .then(() => doFetchBlogs())
+      .then(() => doShowInfo("Blog successfully deleted"))
+      .catch(e => {
+        doShowError(e.message)
+      })
+    }
+  }
+
   // initiate fetching blogs if logged in
   // and blogs undefined
   useEffect(() => {
@@ -113,7 +124,17 @@ function App() {
 
 
   const blogList = !!blogs
-    ? <div>{blogs.sort((a,b) => b.likes - a.likes).map(b => <Blog blog={b} key={b.id}  onLikeClicked={onLikeClicked} />)}</div>
+    ? <div>{
+      blogs
+        .sort((a, b) => b.likes - a.likes)
+        .map(b =>
+          <Blog
+            blog={b}
+            key={b.id}
+            onLikeClicked={onLikeClicked}
+            onBlogRemove={onBlogRemove}
+        />)}
+    </div>
     : (<div></div>);
 
   return (
@@ -136,7 +157,7 @@ function App() {
           ref={blogFormRef}
           buttonTextWhenOpen="Cancel"
           buttonTextWhenClosed="Submit New Blog">
-            <BlogEntryForm onBlogSubmit={onBlogSubmit}/>
+            <BlogEntryForm onBlogSubmit={onBlogSubmit} />
         </Togglable>
         : <></>}
       <br/>
