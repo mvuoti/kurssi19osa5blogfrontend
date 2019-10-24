@@ -113,7 +113,7 @@ function App() {
 
 
   const blogList = !!blogs
-    ? <div>{blogs.map(b => <Blog blog={b} key={b.id}  onLikeClicked={onLikeClicked} />)}</div>
+    ? <div>{blogs.sort((a,b) => b.likes - a.likes).map(b => <Blog blog={b} key={b.id}  onLikeClicked={onLikeClicked} />)}</div>
     : (<div></div>);
 
   return (
