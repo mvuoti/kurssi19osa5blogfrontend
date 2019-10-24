@@ -12,9 +12,26 @@ const getAll = () => {
 }
 
 const save = (blog, token) => {
+  const isNew = blog.id === undefined
+  if (isNew) {
+    return saveNewBlog(blog, token)
+  } else {
+    return saveOldBlog(blog, token)
+  }
+}
+
+const saveNewBlog = (blog, token) => {
   const authHead = makeAuthorizationHeader(token)
   const config = { headers: authHead }
   const request = axios.post(baseUrl, blog, config)
+  return request.then(response => response.data)
+}
+
+const saveOldBlog = (blog, token) => {
+  const authHead = makeAuthorizationHeader(token)
+  const config = { headers: authHead }
+  const itemUrl = [baseUrl, blog.id].join('/')
+  const request = axios.put(itemUrl, blog, config)
   return request.then(response => response.data)
 }
 

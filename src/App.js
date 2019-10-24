@@ -10,7 +10,7 @@ import LoginService from './services/login.js';
 import BlogsService from './services/blogs.js';
 
 
-const NOTIFICATION_DISPLAY_TIME_MS = 300;
+const NOTIFICATION_DISPLAY_TIME_MS = 3000;
 
 function App() {
   const [username, setUsername] = useState('seppo');
@@ -58,7 +58,7 @@ function App() {
   const doFetchBlogs = () => {
     BlogsService.getAll()
       .then(blogs => setBlogs(blogs))
-      .catch(e => doShowError(e))
+      .catch(e => doShowError(e.message))
   }
   const onDoLogin = () => {
     LoginService.doLogin(username, password)
@@ -84,7 +84,17 @@ function App() {
     .then(() => doShowInfo(`Blog "${blogValues.title}" saved!`))
     .then(() => blogFormRef.current.doHide())
     .catch(e => {
-      doShowError(e)
+      doShowError(e.message)
+    })
+  }
+
+  const onLikeClicked = blogValues => {
+    blogValues.likes += 1
+    BlogsService.save(blogValues, user.token)
+    .then(() => doFetchBlogs())
+    .then(() => doShowInfo(`Your like saved on blog "${blogValues.title}"!`))
+    .catch(e => {
+      doShowError(e.message)
     })
   }
 
@@ -103,7 +113,7 @@ function App() {
 
 
   const blogList = !!blogs
-    ? <div>{blogs.map(b => <Blog blog={b} key={b.id}/>)}</div>
+    ? <div>{blogs.map(b => <Blog blog={b} key={b.id}  onLikeClicked={onLikeClicked} />)}</div>
     : (<div></div>);
 
   return (
@@ -126,7 +136,7 @@ function App() {
           ref={blogFormRef}
           buttonTextWhenOpen="Cancel"
           buttonTextWhenClosed="Submit New Blog">
-            <BlogEntryForm onBlogSubmit={onBlogSubmit} />
+            <BlogEntryForm onBlogSubmit={onBlogSubmit}/>
         </Togglable>
         : <></>}
       <br/>
