@@ -132,7 +132,7 @@ function App() {
             blog={b}
             key={b.id}
             onLikeClicked={onLikeClicked}
-            onBlogRemove={onBlogRemove}
+            onBlogRemove={b.user.id === user.id ? onBlogRemove : undefined }
         />)}
     </div>
     : (<div></div>);

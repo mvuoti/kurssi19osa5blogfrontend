@@ -18,7 +18,10 @@ const Blog = ({ blog, onLikeClicked, onBlogRemove }) => {
       <div><a href={blog.url}>{blog.url}</a></div>
       <div>{blog.likes} likes <button onClick={()=>onLikeClicked(blog)}>Like</button></div>
       <div>added by {blog.user.name}</div>
-      <div><button onClick={() => onBlogRemove(blog) }>Remove</button></div>
+      { onBlogRemove !== undefined
+        ? <div><button onClick={() => onBlogRemove(blog) }>Remove</button></div>
+        : <></>
+      }
     </div>
 
   return isFullView ? fullView : tightView
