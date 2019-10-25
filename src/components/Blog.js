@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 import './blog.css'
 
 const Blog = ({ blog, onLikeClicked, onBlogRemove }) => {
@@ -25,6 +26,10 @@ const Blog = ({ blog, onLikeClicked, onBlogRemove }) => {
     </div>
 
   return isFullView ? fullView : tightView
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired
 }
 
 export default Blog

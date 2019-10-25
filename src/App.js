@@ -9,7 +9,6 @@ import Togglable from './components/togglable';
 import LoginService from './services/login.js';
 import BlogsService from './services/blogs.js';
 
-
 const NOTIFICATION_DISPLAY_TIME_MS = 3000;
 
 function App() {
@@ -22,7 +21,8 @@ function App() {
   const [notificationTimeoutId, setNotificationTimeoutId] = useState(undefined);
 
   // ref for managing togglable blog form visibility
-  const blogFormRef = createRef();
+  const blogFormRef = createRef(null);
+  const loginFormRef = createRef(null);
 
   // local storage of login session
   const doSaveSessionToLocalStorage = (sessionData) => {
@@ -79,10 +79,10 @@ function App() {
   }
 
   const onBlogSubmit = blogValues => {
+    blogFormRef.current.doHide()
     BlogsService.save(blogValues, user.token)
     .then(() => doFetchBlogs())
     .then(() => doShowInfo(`Blog "${blogValues.title}" saved!`))
-    .then(() => blogFormRef.current.doHide())
     .catch(e => {
       doShowError(e.message)
     })
@@ -102,7 +102,7 @@ function App() {
     if(window.confirm(`You are deleting blog ${blog.title}?`)) {
       BlogsService.remove(blog.id, user.token)
       .then(() => doFetchBlogs())
-      .then(() => doShowInfo("Blog successfully deleted"))
+      .then(() => doShowInfo("Blog successfully removed!"))
       .catch(e => {
         doShowError(e.message)
       })
@@ -119,7 +119,6 @@ function App() {
 
   useEffect(() => {
     doRestoreSessionFromLocalStorage()
-    doShowInfo("Welcome to BLOGS!")
   }, [])
 
 
@@ -140,7 +139,7 @@ function App() {
   return (
     <div className="App">
       <Notification text={ notificationText } isError={notificationIsError}/>
-      <Togglable buttonTextWhenClosed='Show Login' buttonTextWhenOpen='Hide Login'>
+      <Togglable buttonTextWhenClosed='Show Login' buttonTextWhenOpen='Hide Login' ref={loginFormRef}>
         <Login
           isLoggedIn={!!user}
           username={username}
@@ -154,9 +153,9 @@ function App() {
       <br/>
       { user !== undefined
         ? <Togglable
-          ref={blogFormRef}
-          buttonTextWhenOpen="Cancel"
-          buttonTextWhenClosed="Submit New Blog">
+              ref={blogFormRef}
+              buttonTextWhenOpen="Cancel"
+              buttonTextWhenClosed="Submit New Blog">
             <BlogEntryForm onBlogSubmit={onBlogSubmit} />
         </Togglable>
         : <></>}

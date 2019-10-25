@@ -12,13 +12,15 @@ const Togglable = forwardRef(
   const doShow = () => setIsOpen(true)
   const doHide = () => setIsOpen(false)
 
-  useImperativeHandle(ref, () => {
-    return { doToggle, doShow, doHide }
-  })
+  useImperativeHandle(ref, () => ({
+    doToggle, doShow, doHide
+  }))
 
   const buttonLabel = isOpen ? buttonTextWhenOpen : buttonTextWhenClosed
   const button = <button onClick={doToggle}>{buttonLabel}</button> 
-  return <div>{isOpen ? [children, linebreak] : ""}{button}</div>
+  const childContainerStyle = { display: isOpen ? 'block' : 'none' }
+  const togglableContent = <div style={childContainerStyle}>{children}{linebreak}</div>
+  return <div>{togglableContent}{button}</div>
 })
 
 export default Togglable

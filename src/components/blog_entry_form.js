@@ -22,6 +22,7 @@ const BlogEntryForm = ({ blogValues, onBlogSubmit }) => {
   };
 
   const onSubmitClicked = e => {
+    e.preventDefault()
     onBlogSubmit({ title, author, url });
     doClearFields();
   }
