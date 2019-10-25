@@ -1,9 +1,10 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import './App.css';
-import { useState, useEffect, createRef } from 'react';
+import {useState, useEffect, createRef} from 'react';
 import Login from './components/login.js';
 import Blog from './components/Blog.js';
-import BlogEntryForm from  './components/blog_entry_form';
+import BlogEntryForm from './components/blog_entry_form';
 import Notification from './components/notification';
 import Togglable from './components/togglable';
 import LoginService from './services/login.js';
@@ -27,119 +28,122 @@ function App() {
   // local storage of login session
   const doSaveSessionToLocalStorage = (sessionData) => {
     const userJSON = JSON.stringify(sessionData);
-    window.localStorage.setItem("user", userJSON);
-  }
+    window.localStorage.setItem('user', userJSON);
+  };
   const doRestoreSessionFromLocalStorage = () => {
-    const userJSON = window.localStorage.getItem("user");
+    const userJSON = window.localStorage.getItem('user');
     if (userJSON) {
       setUser(JSON.parse(userJSON));
     }
-  }
+  };
   const doClearSessionFromLocalStorage = () => {
-    window.localStorage.removeItem("user");
-  }
+    window.localStorage.removeItem('user');
+  };
 
   // notification management
   const doShowNotification = (text, isError) => {
     setNotificationText(text);
     setNotificationIsError(isError);
     if (notificationTimeoutId) {
-      window.clearTimeout(notificationTimeoutId)
+      window.clearTimeout(notificationTimeoutId);
     }
     const timeoutId = window.setTimeout(() => {
       setNotificationText(undefined);
-    }, NOTIFICATION_DISPLAY_TIME_MS)
-    setNotificationTimeoutId(timeoutId)
-  }
+    }, NOTIFICATION_DISPLAY_TIME_MS);
+    setNotificationTimeoutId(timeoutId);
+  };
   const doShowInfo = (text) => doShowNotification(text, false);
   const doShowError = (text) => doShowNotification(text, true);
 
   // actions triggered by components
   const doFetchBlogs = () => {
     BlogsService.getAll()
-      .then(blogs => setBlogs(blogs))
-      .catch(e => doShowError(e.message))
-  }
+        .then((blogs) => setBlogs(blogs))
+        .catch((e) => doShowError(e.message));
+  };
   const onDoLogin = () => {
     LoginService.doLogin(username, password)
-      .then(sessionData => {
-        setUser(sessionData);
-        doSaveSessionToLocalStorage(sessionData);
-        doShowInfo(`User ${sessionData.username} logged in!`)
-      })
-      .catch(e => {
-        doShowError("Login failed:" + e.message);
-      })
-  }
+        .then((sessionData) => {
+          setUser(sessionData);
+          doSaveSessionToLocalStorage(sessionData);
+          doShowInfo(`User ${sessionData.username} logged in!`);
+        })
+        .catch((e) => {
+          doShowError('Login failed:' + e.message);
+        });
+  };
   const onDoLogout = () => {
     setUser(undefined);
     setBlogs(undefined);
     doClearSessionFromLocalStorage();
-    doShowInfo("Good Bye!")
-  }
+    doShowInfo('Good Bye!');
+  };
 
-  const onBlogSubmit = blogValues => {
-    blogFormRef.current.doHide()
+  const onBlogSubmit = (blogValues) => {
+    blogFormRef.current.doHide();
     BlogsService.save(blogValues, user.token)
-    .then(() => doFetchBlogs())
-    .then(() => doShowInfo(`Blog "${blogValues.title}" saved!`))
-    .catch(e => {
-      doShowError(e.message)
-    })
-  }
+        .then(() => doFetchBlogs())
+        .then(() => doShowInfo(`Blog "${blogValues.title}" saved!`))
+        .catch((e) => {
+          doShowError(e.message);
+        });
+  };
 
-  const onLikeClicked = blogValues => {
-    blogValues.likes += 1
+  const onLikeClicked = (blogValues) => {
+    blogValues.likes += 1;
     BlogsService.save(blogValues, user.token)
-    .then(() => doFetchBlogs())
-    .then(() => doShowInfo(`Your like saved on blog "${blogValues.title}"!`))
-    .catch(e => {
-      doShowError(e.message)
-    })
-  }
+        .then(() => doFetchBlogs())
+        .then(() => doShowInfo(
+            `Your like saved on blog "${blogValues.title}"!`)
+        )
+        .catch((e) => {
+          doShowError(e.message);
+        });
+  };
 
-  const onBlogRemove = blog => {
-    if(window.confirm(`You are deleting blog ${blog.title}?`)) {
+  const onBlogRemove = (blog) => {
+    if (window.confirm(`You are deleting blog ${blog.title}?`)) {
       BlogsService.remove(blog.id, user.token)
-      .then(() => doFetchBlogs())
-      .then(() => doShowInfo("Blog successfully removed!"))
-      .catch(e => {
-        doShowError(e.message)
-      })
+          .then(() => doFetchBlogs())
+          .then(() => doShowInfo('Blog successfully removed!'))
+          .catch((e) => {
+            doShowError(e.message);
+          });
     }
-  }
+  };
 
   // initiate fetching blogs if logged in
   // and blogs undefined
   useEffect(() => {
     if (blogs === undefined && user !== undefined) {
-      doFetchBlogs()
+      doFetchBlogs();
     }
   });
 
   useEffect(() => {
-    doRestoreSessionFromLocalStorage()
-  }, [])
+    doRestoreSessionFromLocalStorage();
+  }, []);
 
 
-  const blogList = !!blogs
-    ? <div>{
+  const blogList = !!blogs ?
+    <div>{
       blogs
-        .sort((a, b) => b.likes - a.likes)
-        .map(b =>
-          <Blog
-            blog={b}
-            key={b.id}
-            onLikeClicked={onLikeClicked}
-            onBlogRemove={b.user.id === user.id ? onBlogRemove : undefined }
-        />)}
-    </div>
-    : (<div></div>);
+          .sort((a, b) => b.likes - a.likes)
+          .map((b) =>
+            <Blog
+              blog={b}
+              key={b.id}
+              onLikeClicked={onLikeClicked}
+              onBlogRemove={b.user.id === user.id ? onBlogRemove : undefined }
+            />)}
+    </div> :
+    (<div></div>);
 
   return (
     <div className="App">
       <Notification text={ notificationText } isError={notificationIsError}/>
-      <Togglable buttonTextWhenClosed='Show Login' buttonTextWhenOpen='Hide Login' ref={loginFormRef}>
+      <Togglable buttonTextWhenClosed='Show Login'
+        buttonTextWhenOpen='Hide Login' ref={loginFormRef}>
         <Login
           isLoggedIn={!!user}
           username={username}
@@ -151,14 +155,14 @@ function App() {
         />
       </Togglable>
       <br/>
-      { user !== undefined
-        ? <Togglable
-              ref={blogFormRef}
-              buttonTextWhenOpen="Cancel"
-              buttonTextWhenClosed="Submit New Blog">
-            <BlogEntryForm onBlogSubmit={onBlogSubmit} />
-        </Togglable>
-        : <></>}
+      { user !== undefined ?
+        <Togglable
+          ref={blogFormRef}
+          buttonTextWhenOpen="Cancel"
+          buttonTextWhenClosed="Submit New Blog">
+          <BlogEntryForm onBlogSubmit={onBlogSubmit} />
+        </Togglable> :
+        <></>}
       <br/>
       <div>{ blogList }</div>
     </div>

@@ -1,35 +1,39 @@
-import React from 'react'
-import { useState } from 'react'
-import PropTypes from 'prop-types'
-import './blog.css'
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
+import {useState} from 'react';
+import PropTypes from 'prop-types';
+import './blog.css';
 
-const Blog = ({ blog, onLikeClicked, onBlogRemove }) => {
-  const [isFullView, setIsFullView] = useState(false)
+const Blog = ({blog, onLikeClicked, onBlogRemove}) => {
+  const [isFullView, setIsFullView] = useState(false);
 
-  const toggleFullView = () => setIsFullView(!isFullView)
+  const toggleFullView = () => setIsFullView(!isFullView);
 
   const tightView =
     <div className="blog-list-entry-tight">
       <div onClick={toggleFullView}>{blog.title}<em>-- {blog.author}</em></div>
-    </div>
+    </div>;
 
   const fullView =
-    <div className={"blog-list-entry-full"}>
-      <div className={"blog-title"} onClick={toggleFullView}>{blog.title}</div>
+    <div className={'blog-list-entry-full'}>
+      <div className={'blog-title'} onClick={toggleFullView}>{blog.title}</div>
       <div><a href={blog.url}>{blog.url}</a></div>
-      <div>{blog.likes} likes <button onClick={()=>onLikeClicked(blog)}>Like</button></div>
+      <div>
+        {blog.likes} likes
+        <button onClick={()=>onLikeClicked(blog)}>Like</button>
+      </div>
       <div>added by {blog.user.name}</div>
-      { onBlogRemove !== undefined
-        ? <div><button onClick={() => onBlogRemove(blog) }>Remove</button></div>
-        : <></>
+      { onBlogRemove !== undefined ?
+        <div><button onClick={() => onBlogRemove(blog) }>Remove</button></div> :
+        <></>
       }
-    </div>
+    </div>;
 
-  return isFullView ? fullView : tightView
-}
+  return isFullView ? fullView : tightView;
+};
 
 Blog.propTypes = {
-  blog: PropTypes.object.isRequired
-}
+  blog: PropTypes.object.isRequired,
+};
 
-export default Blog
+export default Blog;
