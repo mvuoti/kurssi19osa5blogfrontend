@@ -11,12 +11,16 @@ const Blog = ({blog, onLikeClicked, onBlogRemove}) => {
 
   const tightView =
     <div className="blog-list-entry-tight">
-      <div onClick={toggleFullView}>{blog.title}<em>-- {blog.author}</em></div>
+      <div onClick={toggleFullView} data-testid='toggle-full-view'>
+        {blog.title}<em>-- {blog.author}</em>
+      </div>
     </div>;
 
   const fullView =
     <div className={'blog-list-entry-full'}>
-      <div className={'blog-title'} onClick={toggleFullView}>{blog.title}</div>
+      <div className={'blog-title'} onClick={toggleFullView} data-testid='toggle-full-view'>
+        {blog.title}<em>-- {blog.author}</em>
+      </div>
       <div><a href={blog.url}>{blog.url}</a></div>
       <div>
         {blog.likes} likes
