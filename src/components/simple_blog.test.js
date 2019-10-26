@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, cleanup } from '@testing-library/react'
+import { render, cleanup, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 
 import { getByTestId } from '@testing-library/dom'
@@ -39,3 +39,17 @@ describe('<SimpleBlog /> rendering', () => {
   })
 })
 
+describe('<SimpleBlog /> user interaction', () => {
+  test('two like button clicks increment likes by two', () => {
+    const onClickMock = jest.fn()
+    const simpleBlogNode = render(
+      <SimpleBlog blog={INITIAL_BLOG_OBJECT} onClick={onClickMock}/>
+    )
+    const likeButton = simpleBlogNode.container.querySelector('button')
+    fireEvent.click(likeButton)
+    fireEvent.click(likeButton)
+    expect(onClickMock.mock.calls.length)
+      .toEqual(2)
+  })
+
+})
