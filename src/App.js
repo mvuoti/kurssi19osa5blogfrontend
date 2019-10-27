@@ -137,7 +137,7 @@ function App() {
               onBlogRemove={b.user.id === user.id ? onBlogRemove : undefined }
             />)}
     </div> :
-    (<div></div>);
+    undefined;
 
   return (
     <div className="App">
@@ -164,7 +164,7 @@ function App() {
         </Togglable> :
         <></>}
       <br/>
-      <div>{ blogList }</div>
+      <div className="blog-list">{ blogList }</div>
     </div>
   );
 }
