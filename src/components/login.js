@@ -2,8 +2,14 @@ import React from 'react';
 import './Login.css';
 
 const Login = ({
-  usernameField, passwordField, doLogin, doLogout, loggedInUser,
+  usernameField, passwordField,
+  usernameFieldReset, passwordFieldReset,
+  doLogin, doLogout, loggedInUser,
 }) => {
+  const resetFields = () => {
+    usernameFieldReset();
+    passwordFieldReset();
+  };
   const loginDialog = () => (
     <div>
       <label htmlFor="usernameInput">Username:</label>
@@ -13,6 +19,7 @@ const Login = ({
       <input id="passwordInput" {...passwordField} />
       <br/>
       <input type="button" onClick={doLogin} value="Login" />
+      <input type="button" onClick={resetFields} value="Reset" />
     </div>
   );
 

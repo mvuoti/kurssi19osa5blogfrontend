@@ -1,54 +1,46 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
 import {useState} from 'react';
+import {useField} from '../hooks';
 import './blog_entry_form.css';
 
 const DEFAULT_TITLE = '';
 const DEFAULT_AUTHOR = '';
 const DEFAULT_URL = 'http://';
 
-const BlogEntryForm = ({blogValues, onBlogSubmit}) => {
-  const [title, setTitle] = useState(DEFAULT_TITLE);
-  const [author, setAuthor] = useState(DEFAULT_AUTHOR);
-  const [url, setUrl] = useState(DEFAULT_URL);
-
-  const onTitleChange = (e) => {
-    setTitle(e.target.value);
-  };
-  const onAuthorChange = (e) => {
-    setAuthor(e.target.value);
-  };
-  const onUrlChange = (e) => {
-    setUrl(e.target.value);
-  };
+const BlogEntryForm = ({onBlogSubmit}) => {
+  const [titleField, titleFieldReset] = useField('text');
+  const [authorField, authorFieldReset] = useField('text');
+  const [urlField, urlFieldReset] = useField('text');
 
   const doClearFields = () => {
-    setTitle(DEFAULT_TITLE);
-    setAuthor(DEFAULT_AUTHOR);
-    setUrl(DEFAULT_URL);
+    titleFieldReset();
+    authorFieldReset();
+    urlFieldReset();
   };
-
   const onSubmitClicked = (e) => {
     e.preventDefault();
-    onBlogSubmit({title, author, url});
+    onBlogSubmit({
+      title: titleField.value,
+      author: authorField.value,
+      url: urlField.value,
+    });
     doClearFields();
   };
-  const onClearClicked = (e) => {
+  const onClearClicked = () => {
     doClearFields();
   };
   return (
     <form className="blog-entry-form">
       <h3>New Blog</h3>
       <label htmlFor="title">Title:</label>
-      <input id="title" type="text" value={ title }
-        onChange={ onTitleChange } />
+      <input id="title" {...titleField} />
       <br/>
       <label htmlFor="author">Author:</label>
-      <input id="author" type="text" value={ author }
-        onChange={ onAuthorChange } />
+      <input id="author" {...authorField} />
       <br/>
       <label htmlFor="url">URL:</label>
-      <input id="url" type="text" value={ url } onChange={ onUrlChange } />
+      <input id="url" {...urlField} />
       <br/>
       <div className="button-group">
         <input type="submit" value="Save!" onClick={ onSubmitClicked } />

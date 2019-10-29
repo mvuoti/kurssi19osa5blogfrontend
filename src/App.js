@@ -19,8 +19,8 @@ function App() {
   const [notificationText, setNotificationText] = useState(undefined);
   const [notificationIsError, setNotificationIsError] = useState(undefined);
   const [notificationTimeoutId, setNotificationTimeoutId] = useState(undefined);
-  const usernameField = useField('text');
-  const passwordField = useField('password');
+  const [usernameField, usernameFieldReset] = useField('text');
+  const [passwordField, passwordFieldReset] = useField('password');
 
   // ref for managing togglable blog form visibility
   const blogFormRef = createRef(null);
@@ -149,6 +149,8 @@ function App() {
           loggedInUser={!!user ? user.username : undefined}
           usernameField={usernameField}
           passwordField={passwordField}
+          usernameFieldReset={usernameFieldReset}
+          passwordFieldReset={passwordFieldReset}
           doLogin={onDoLogin}
           doLogout={onDoLogout}
         />
@@ -156,7 +158,7 @@ function App() {
       <br/>
       { user !== undefined ?
         <Togglable
-          ref={blogFormRef}
+          ref={blogFormRef}G
           buttonTextWhenOpen="Cancel"
           buttonTextWhenClosed="Submit New Blog">
           <BlogEntryForm onBlogSubmit={onBlogSubmit} />
