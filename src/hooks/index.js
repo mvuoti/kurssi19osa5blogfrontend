@@ -8,6 +8,7 @@ const useField = (type) => {
   const reset = () => {
     setValue('');
   };
+
   const fieldObject = {
     type,
     value,

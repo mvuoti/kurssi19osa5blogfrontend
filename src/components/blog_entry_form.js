@@ -4,10 +4,6 @@ import {useState} from 'react';
 import {useField} from '../hooks';
 import './blog_entry_form.css';
 
-const DEFAULT_TITLE = '';
-const DEFAULT_AUTHOR = '';
-const DEFAULT_URL = 'http://';
-
 const BlogEntryForm = ({onBlogSubmit}) => {
   const [titleField, titleFieldReset] = useField('text');
   const [authorField, authorFieldReset] = useField('text');

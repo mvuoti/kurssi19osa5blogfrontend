@@ -140,6 +140,8 @@ function App() {
     </div> :
     undefined;
 
+  const objectWithUndefinedReset = { reset: undefined };
+
   return (
     <div className="App">
       <Notification text={ notificationText } isError={notificationIsError}/>
@@ -147,8 +149,8 @@ function App() {
         buttonTextWhenOpen='Hide Login' ref={loginFormRef}>
         <Login
           loggedInUser={!!user ? user.username : undefined}
-          usernameField={usernameField}
-          passwordField={passwordField}
+          {...usernameField}
+          {...passwordField}
           usernameFieldReset={usernameFieldReset}
           passwordFieldReset={passwordFieldReset}
           doLogin={onDoLogin}
