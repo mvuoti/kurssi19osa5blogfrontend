@@ -1,36 +1,33 @@
-import React from 'react'
-import './Login.css'
+import React from 'react';
+import './Login.css';
 
-const Login = (props) => {
-  const onUsernameChanged = (event) => props.setUsername(event.target.value);
-  const onPasswordChanged = (event) => props.setPassword(event.target.value);
-  const onLoginClicked = (event) => props.doLogin();
-  const onLogoutClicked = (event) => props.doLogout();
-
+const Login = ({
+  usernameField, passwordField, doLogin, doLogout, loggedInUser,
+}) => {
   const loginDialog = () => (
     <div>
       <label htmlFor="usernameInput">Username:</label>
-      <input type="text" id="usernameInput" onChange={onUsernameChanged} value={props.username} />
+      <input id="usernameInput" {...usernameField} />
       <br/>
       <label htmlFor ="passwordInput">Password:</label>
-      <input id="passwordInput" type="password" onChange={onPasswordChanged} value={props.password} />
+      <input id="passwordInput" {...passwordField} />
       <br/>
-      <input type="button" onClick={onLoginClicked} value="Login" />
+      <input type="button" onClick={doLogin} value="Login" />
     </div>
-    );
+  );
 
   const logoutDialog = () => (
     <div>
-      Logged in as <em>{props.username}</em>
-      <input type="button" onClick={onLogoutClicked} value="Logout" />
+      Logged in as <em>{loggedInUser}</em>
+      <input type="button" onClick={doLogout} value="Logout" />
     </div>
   );
 
-  return  (
+  return (
     <div className="Login">
-      { props.isLoggedIn ? logoutDialog() : loginDialog() }
+      { !!loggedInUser ? logoutDialog() : loginDialog() }
     </div>
   );
-}
+};
 
 export default Login;

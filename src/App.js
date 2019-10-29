@@ -9,17 +9,18 @@ import Notification from './components/notification';
 import Togglable from './components/togglable';
 import LoginService from './services/login.js';
 import BlogsService from './services/blogs.js';
+import {useField} from './hooks';
 
 const NOTIFICATION_DISPLAY_TIME_MS = 3000;
 
 function App() {
-  const [username, setUsername] = useState('seppo');
-  const [password, setPassword] = useState('figaro');
   const [user, setUser] = useState();
   const [blogs, setBlogs] = useState(undefined);
   const [notificationText, setNotificationText] = useState(undefined);
   const [notificationIsError, setNotificationIsError] = useState(undefined);
   const [notificationTimeoutId, setNotificationTimeoutId] = useState(undefined);
+  const usernameField = useField('text');
+  const passwordField = useField('password');
 
   // ref for managing togglable blog form visibility
   const blogFormRef = createRef(null);
@@ -62,7 +63,7 @@ function App() {
         .catch((e) => doShowError(e.message));
   };
   const onDoLogin = () => {
-    LoginService.doLogin(username, password)
+    LoginService.doLogin(usernameField.value, passwordField.value)
         .then((sessionData) => {
           setUser(sessionData);
           doSaveSessionToLocalStorage(sessionData);
@@ -145,11 +146,9 @@ function App() {
       <Togglable buttonTextWhenClosed='Show Login'
         buttonTextWhenOpen='Hide Login' ref={loginFormRef}>
         <Login
-          isLoggedIn={!!user}
-          username={username}
-          password={password}
-          setUsername={setUsername}
-          setPassword={setPassword}
+          loggedInUser={!!user ? user.username : undefined}
+          usernameField={usernameField}
+          passwordField={passwordField}
           doLogin={onDoLogin}
           doLogout={onDoLogout}
         />

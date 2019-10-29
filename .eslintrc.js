@@ -22,7 +22,7 @@ module.exports = {
     'react',
   ],
   'rules': {
-    'linebreak-style': ['error', 'windows'],
+    'linebreak-style': 0, 
     'require-jsdoc': 0,
   },
 };
